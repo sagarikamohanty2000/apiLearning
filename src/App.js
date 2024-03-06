@@ -6,10 +6,18 @@ import "./App.css";
 function App() {
   const [movieList, setMovies] = useState([]);
   const [isLodding, setIsLodding] = useState(false);
+  const [error, setError] = useState(null);
 
   async function fetchMovieHandler() {
+    setError(null);
     setIsLodding(true);
+    try{
     const response = await fetch("https://swapi.dev/api/films/");
+    if(!response.ok)
+    {
+      throw new Error('Something went wrong Retrying...')
+    }
+  
     const data = await response.json();
     const transformedMovie = data.results.map((movie) => {
       return {
@@ -20,8 +28,12 @@ function App() {
       };
     });
     setMovies(transformedMovie);
-    setIsLodding(false);
   }
+  catch(error) {
+    setError(error.message);
+  }
+  setIsLodding(false);
+}
   return (
     <React.Fragment>
       <section>
@@ -29,7 +41,8 @@ function App() {
       </section>
       <section>
         {!isLodding && <MoviesList movies={movieList} />}
-        {isLodding && <p>Lodding...</p>}
+        {isLodding && !error && <p>Lodding...</p>}
+        {error && <p>{error}</p>}
       </section>
     </React.Fragment>
   );
