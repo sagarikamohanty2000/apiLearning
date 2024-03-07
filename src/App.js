@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import MoviesList from "./components/MoviesList";
-
 import "./App.css";
 
 function App() {
@@ -8,32 +7,36 @@ function App() {
   const [isLodding, setIsLodding] = useState(false);
   const [error, setError] = useState(null);
 
-  async function fetchMovieHandler() {
+  useEffect(() => {
+    fetchMovieHandler();
+  },[fetchMovieHandler]);
+
+  const fetchMovieHandler = useCallback(async () => {
     setError(null);
     setIsLodding(true);
-    try{
-    const response = await fetch("https://swapi.dev/api/films/");
-    if(!response.ok)
-    {
-      throw new Error('Something went wrong Retrying...')
+    
+    try {
+      const response = await fetch("https://swapi.dev/api/films/");
+      if (!response.ok) {
+        throw new Error("Something went wrong Retrying...");
+      }
+
+console.log(response);
+      const data = await response.json();
+      const transformedMovie = data.results.map((movie) => {
+        return {
+          id: movie.episode_id,
+          title: movie.title,
+          openingText: movie.opening_crawl,
+          releaseDate: movie.release_date,
+        };
+      });
+      setMovies(transformedMovie);
+    } catch (error) {
+      setError(error.message);
     }
-  
-    const data = await response.json();
-    const transformedMovie = data.results.map((movie) => {
-      return {
-        id: movie.episode_id,
-        title: movie.title,
-        openingText: movie.opening_crawl,
-        releaseDate: movie.release_date,
-      };
-    });
-    setMovies(transformedMovie);
-  }
-  catch(error) {
-    setError(error.message);
-  }
-  setIsLodding(false);
-}
+    setIsLodding(false);
+  }, []);
   return (
     <React.Fragment>
       <section>
@@ -47,5 +50,4 @@ function App() {
     </React.Fragment>
   );
 }
-
 export default App;
