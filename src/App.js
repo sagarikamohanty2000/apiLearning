@@ -1,20 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import MoviesList from "./components/MoviesList";
+import MovieForm from "./components/MovieForm";
 import "./App.css";
 
 function App() {
   const [movieList, setMovies] = useState([]);
   const [isLodding, setIsLodding] = useState(false);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchMovieHandler();
-  },[fetchMovieHandler]);
+  const [movie, setMovie] = useState([]);
 
   const fetchMovieHandler = useCallback(async () => {
     setError(null);
     setIsLodding(true);
-    
+
+
     try {
       const response = await fetch("https://swapi.dev/api/films/");
       if (!response.ok) {
@@ -37,13 +36,25 @@ console.log(response);
     }
     setIsLodding(false);
   }, []);
+
+      
+  useEffect(() => {
+    fetchMovieHandler();
+  },[fetchMovieHandler]);
+  
+    const getMoviedetails = (props) => {
+      setMovie( (prevMovie) => {
+        return [...prevMovie,props];
+      })
+    }
   return (
     <React.Fragment>
+     <MovieForm getMovie={getMoviedetails}></MovieForm>
       <section>
         <button onClick={fetchMovieHandler}>Fetch Movies</button>
       </section>
       <section>
-        {!isLodding && <MoviesList movies={movieList} />}
+        {!isLodding && <MoviesList movies={movie} />}
         {isLodding && !error && <p>Lodding...</p>}
         {error && <p>{error}</p>}
       </section>
