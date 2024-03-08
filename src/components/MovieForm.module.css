@@ -1,0 +1,60 @@
+.formModule {
+  margin: 1rem auto;
+  height: 400px;
+  width: 90%;
+  max-width: 40rem;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.titleFrame {
+  font-size: 20px;
+  margin-right: 10rem;
+  font-weight: bold
+}
+
+.inputTitle input {
+  border-radius: 8px;
+  border: 1px solid black;
+  padding: 5px;
+  width: 90%;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.textFrame {
+  font-size: 20px;
+  margin-right: 10rem;
+  font-weight: bold
+}
+
+.inputText input{
+  border-radius: 8px;
+  border: 1px solid black;
+  padding: 5px;
+  width: 90%;
+  height: 80px;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.releaseFrame {
+  font-size: 20px;
+  margin-right: 10rem;
+  font-weight: bold;
+}
+
+.inputRelease input {
+  border-radius: 8px;
+  border: 1px solid black;
+  padding: 5px;
+  width: 90%;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.btnAdd{
+    margin: 2rem;
+    text-align: center;
+}
