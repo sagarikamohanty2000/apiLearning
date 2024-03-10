@@ -15,22 +15,23 @@ function App() {
 
 
     try {
-      const response = await fetch("https://swapi.dev/api/films/");
+      const response = await fetch("https://api-learning-69ab0-default-rtdb.firebaseio.com/movies.json");
       if (!response.ok) {
         throw new Error("Something went wrong Retrying...");
       }
 
 console.log(response);
       const data = await response.json();
-      const transformedMovie = data.results.map((movie) => {
-        return {
-          id: movie.episode_id,
-          title: movie.title,
-          openingText: movie.opening_crawl,
-          releaseDate: movie.release_date,
-        };
-      });
-      setMovies(transformedMovie);
+      const loadedMovies = [];
+      for(const key in data) {
+        loadedMovies.push({
+          id:key,
+          title: data[key].title,
+          openingText: data[key].openingText,
+          releaseDate: data[key].releaseDate
+        })
+      }
+      setMovies(loadedMovies);
     } catch (error) {
       setError(error.message);
     }
@@ -42,19 +43,36 @@ console.log(response);
     fetchMovieHandler();
   },[fetchMovieHandler]);
   
-    const getMoviedetails = (props) => {
-      setMovie( (prevMovie) => {
-        return [...prevMovie,props];
-      })
+  
+    async function getMoviedetails(props) {
+      try{
+     const response = await fetch("https://api-learning-69ab0-default-rtdb.firebaseio.com/movies.json",{
+     method: 'POST',
+     body: JSON.stringify(props),
+     headers: {
+      'Content-Type': 'application/json'
+     }
+    })
+     
+     if(!response.ok){
+            throw new Error('Something went wrong');
+     }
+     const data = await response.json();
+     console.log(data);
     }
-  return (
+  
+  catch(error){
+ console.log(error.message);
+  }
+}
+  return (  
     <React.Fragment>
      <MovieForm getMovie={getMoviedetails}></MovieForm>
       <section>
         <button onClick={fetchMovieHandler}>Fetch Movies</button>
       </section>
       <section>
-        {!isLodding && <MoviesList movies={movie} />}
+        {!isLodding && <MoviesList movies={movieList} />}
         {isLodding && !error && <p>Lodding...</p>}
         {error && <p>{error}</p>}
       </section>
